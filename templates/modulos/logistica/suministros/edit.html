@@ -1,0 +1,59 @@
+{% include 'header.html' %}
+
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header">Agregar Movil</div>
+            <div class="card-body">
+                <form action="/modulos/logistica/suministros/edit/Actualizar" method="post">
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Codigo</label>
+                        <input type="text" class="form-control" id="codigo" name="codigo" aria-describedby="helpcodigo"
+                            placeholder="Codigo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="helpnombre"
+                            placeholder="Descripción">            
+                    </div>
+                    <div class="mb-3">
+                        <label for="unidad_medida" class="form-label">Unidad medida</label>
+                        <input type="text" class="form-control" id="unidad_medida" name="unidad_medida" aria-describedby="helpcedula"
+                            placeholder="Unidad Medida">
+                    </div>
+                    <div class="mb-3">
+                        <label for="familia" class="form-label">Familia</label>
+                        <input type="text" class="form-control" id="familia" name="familia" aria-describedby="helpcarpeta"
+                            placeholder="Familia">
+                    </div>                
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" aria-describedby="helpestado"
+                            placeholder="Cliente">
+                    </div>
+                    <div class="mb-3">
+                        <label for="requiere_serial" class="form-label">Requiere Serial?</label>
+                        <input type="text" class="form-control" id="requiere_serial" name="requiere_serial" aria-describedby="helpcargo"
+                            placeholder="Requiere Serial?">
+                    </div>
+                                    
+                    <div class="mb-3">
+                        <label for="costo_unitario" class="form-label">Costo Unitario</label>
+                        <input type="text" class="form-control" id="costo_unitario" name="costo_unitario" aria-describedby="helpempresa"
+                            placeholder="Costo Unitario">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input type="text" class="form-control" id="cantidad" name="cantidad" aria-describedby="helpcliente"
+                            placeholder="Cantidad">
+                    </div> 
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>                           
+            </div>
+        </div>
+    </div>
+    <div class="col-4"></div>
+</div>
+
+{% include 'footer.html' %}

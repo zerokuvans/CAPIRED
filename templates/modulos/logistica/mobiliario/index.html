@@ -1,0 +1,48 @@
+{% include "header.html" %}
+    <a href="/almacen/create" class="btn btn-primary">Crear Movil</a>
+    <div class="table-responsive">
+        <table class="table"> <br>
+            <thead class="table table-dark">
+                <tr>
+                    <th>Codigo</th>
+                    <th>Cedula</th>
+                    <th>Responsable Movil</th>
+                    <th>Carpeta</th>
+                    <th>Supervisor</th>
+                    <th>Estado</th>
+                    <th>Fecha Creación</th>
+                    <th>Fecha Inactividad</th>
+                    <th>Cargo</th>
+                    <th>Ciudad</th>
+                    <th>Empresa</th>
+                    <th>Cliente</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recurso_operativo in recurso_operativo %}
+                    <tr>
+                        <td>{{ recurso_operativo['id_codigo_consumidor']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_cedula']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_nombre']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_carpeta']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_supervisor']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_estado']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_fecha_creacion']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_fecha_inactividad']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_cargo']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_ciudad']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_empresa']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_cliente']}}</td>
+                        <td>
+                            <a href="/almacen/Editar/{{recurso_operativo['id_codigo_consumidor']}}" class="btn btn-warning">Editar</a>
+                            <a href="/almacen/Eliminar/{{recurso_operativo['id_codigo_consumidor']}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+
+{% include "footer.html" %}

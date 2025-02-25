@@ -1,0 +1,111 @@
+{% include "header.html" %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Lista de Suministros</h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearSuministroModal">
+            Crear Suministro
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Codigo Suministro</th>
+                    <th>Descripción</th>
+                    <th>Unidad Medida</th>
+                    <th>Familia</th>
+                    <th>Cliente</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Requiere Serial</th>
+                    <th>Costo Unitario</th>
+                    <th>Cantidad</th>
+                    <th>Fecha Registro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for suministro in suministros %}
+                    <tr>
+                        <td>{{ suministro['id_suministros'] }}</td>
+                        <td>{{ suministro['suministros_codigo'] }}</td>
+                        <td>{{ suministro['suministros_descripcion'] }}</td>
+                        <td>{{ suministro['suministros_unidad_medida'] }}</td>
+                        <td>{{ suministro['suministros_familia'] }}</td>
+                        <td>{{ suministro['suministros_cliente'] }}</td>
+                        <td>{{ suministro['suministros_tipo'] }}</td>
+                        <td>{{ suministro['suministros_estado'] }}</td>
+                        <td>{{ suministro['suministros_requiere_serial'] }}</td>
+                        <td>{{ suministro['suministros_costo_unitario'] }}</td>
+                        <td>{{ suministro['suministros_cantidad'] }}</td>
+                        <td>{{ suministro['fecha_registro'] }}</td>
+                        <td>
+                            <a href="/logistica/suministros/Editar/{{ suministro['id_suministros'] }}" class="btn btn-warning btn-sm">Editar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="crearSuministroModal" tabindex="-1" aria-labelledby="crearSuministroModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearSuministroModalLabel">Crear Suministro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="crearSuministroForm" action="/logistica/suministros/create/guardar" method="post">
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Codigo</label>
+                        <input type="text" class="form-control" id="codigo" name="codigo" aria-describedby="helpcodigo" placeholder="Codigo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="helpnombre" placeholder="Descripción" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unidad_medida" class="form-label">Unidad Medida</label>
+                        <select class="form-select" aria-label="Unidad Medida" name="unidad_medida" id="unidad_medida" required>
+                            <option selected disabled>Seleccione unidad de medida</option>
+                            <option value="1">Und</option>
+                            <option value="2">Mts</option>
+                            <option value="3">Pqte</option>
+                            <option value="4">Gl</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="familia" class="form-label">Familia</label>
+                        <input type="text" class="form-control" id="familia" name="familia" aria-describedby="helpcarpeta" placeholder="Familia" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" aria-describedby="helpestado" placeholder="Cliente" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="requiere_serial" class="form-label">Requiere Serial?</label>
+                        <input type="text" class="form-control" id="requiere_serial" name="requiere_serial" aria-describedby="helpcargo" placeholder="Requiere Serial?" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="costo_unitario" class="form-label">Costo Unitario</label>
+                        <input type="text" class="form-control" id="costo_unitario" name="costo_unitario" aria-describedby="helpempresa" placeholder="Costo Unitario" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input type="text" class="form-control" id="cantidad" name="cantidad" aria-describedby="helpcliente" placeholder="Cantidad" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="crearSuministroForm" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}

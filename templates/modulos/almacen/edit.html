@@ -1,0 +1,79 @@
+{% include 'header.html' %}
+
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header">Editar Movil</div>
+            <div class="card-body">
+                <form action="/almacen/edit/Actualizar" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="id" class="form-label">Codigo Consumidor</label>
+                        <input type="text" class="form-control" id="id" name="id" aria-describedby="helpcedula"
+                            placeholder="Codigo" value="{{ recurso_operativo['id_codigo_consumidor'] }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="helpnombre"
+                            placeholder="Nombre" value="{{ recurso_operativo['recurso_operativo_nombre'] }}">               
+                    </div>
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cedula</label>
+                        <input type="text" class="form-control" id="cedula" name="cedula" aria-describedby="helpcedula"
+                            placeholder="Cedula" value="{{ recurso_operativo['recurso_operativo_cedula'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="carpeta" class="form-label">Carpeta</label>
+                        <input type="text" class="form-control" id="carpeta" name="carpeta" aria-describedby="helpcarpeta"
+                            placeholder="Carpeta" value="{{ recurso_operativo['recurso_operativo_carpeta'] }}">
+                    </div>                
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <input type="text" class="form-control" id="estado" name="estado" aria-describedby="helpestado"
+                            placeholder="Estado" value="{{ recurso_operativo['recurso_operativo_estado'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cargo" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="cargo" name="cargo" aria-describedby="helpcargo"
+                            placeholder="Cargo" value="{{ recurso_operativo['recurso_operativo_cargo'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ciudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" aria-describedby="helpciudad"
+                            placeholder="Ciudad" value="{{ recurso_operativo['recurso_operativo_ciudad'] }}">
+                    </div>                    
+                    <div class="mb-3">
+                        <label for="empresa" class="form-label">Empresa</label>
+                        <input type="text" class="form-control" id="empresa" name="empresa" aria-describedby="helpempresa"
+                            placeholder="Empresa" value="{{ recurso_operativo['recurso_operativo_empresa'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" aria-describedby="helpcliente"
+                            placeholder="Cliente" value="{{ recurso_operativo['recurso_operativo_cliente'] }}">
+                    </div> 
+                    <div class="mb-3">
+                        <label for="mail" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="mail" name="mail" aria-describedby="helpmail"
+                            placeholder="Correo" value="{{ recurso_operativo['recurso_operativo_mail'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" aria-describedby="helptelefono"
+                            placeholder="Telefono" value="{{ recurso_operativo['recurso_operativo_telefono'] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="foto" class="form-label">Foto</label>
+                        <input type="file" class="form-control" id="foto" name="foto" aria-describedby="helpfoto">
+                        <input type="hidden" name="current_foto" value="{{ recurso_operativo['recurso_operativo_foto'] }}">
+                        <img src="{{ url_for('static', filename='uploads/' ~ recurso_operativo['recurso_operativo_foto']) }}" alt="Foto actual" class="img-thumbnail mt-2" width="150">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </form>                           
+            </div>
+        </div>
+    </div>
+    <div class="col-4"></div>
+</div>
+
+{% include 'footer.html' %}

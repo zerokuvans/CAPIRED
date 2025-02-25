@@ -1,0 +1,129 @@
+{% include "header.html" %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Listado de Moviles</h2>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+                Crear Movil
+            </button>
+            <button type="button" class="btn btn-success" onclick="exportarCSV()">Exportar CSV</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Codigo</th>
+                    <th>Cedula</th>
+                    <th>Responsable Movil</th>
+                    <th>Carpeta</th>
+                    <th>Supervisor</th>
+                    <th>Estado</th>
+                    <th>Fecha Creación</th>
+                    <th>Fecha Inactividad</th>
+                    <th>Cargo</th>
+                    <th>Ciudad</th>
+                    <th>Empresa</th>
+                    <th>Cliente</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for recurso_operativo in recurso_operativo %}
+                    <tr>
+                        <td>{{ recurso_operativo['id_codigo_consumidor']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_cedula']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_nombre']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_carpeta']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_supervisor']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_estado']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_fecha_creacion']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_fecha_inactividad']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_cargo']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_ciudad']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_empresa']}}</td>
+                        <td>{{ recurso_operativo['recurso_operativo_cliente']}}</td>
+                        <td>
+                            <a href="/almacen/Editar/{{recurso_operativo['id_codigo_consumidor']}}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="/almacen/Eliminar/{{recurso_operativo['id_codigo_consumidor']}}" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Agregar Movil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/almacen/create/guardar" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="id" class="form-label">Codigo Consumidor</label>
+                        <input type="text" class="form-control" id="id" name="id" aria-describedby="helpcedula" placeholder="Codigo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="helpnombre" placeholder="Nombre">            
+                    </div>
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cedula</label>
+                        <input type="text" class="form-control" id="cedula" name="cedula" aria-describedby="helpcedula" placeholder="Cedula">
+                    </div>
+                    <div class="mb-3">
+                        <label for="carpeta" class="form-label">Carpeta</label>
+                        <input type="text" class="form-control" id="carpeta" name="carpeta" aria-describedby="helpcarpeta" placeholder="Carpeta">
+                    </div>                
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <input type="text" class="form-control" id="estado" name="estado" aria-describedby="helpestado" placeholder="Estado">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cargo" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="cargo" name="cargo" aria-describedby="helpcargo" placeholder="Cargo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ciudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" aria-describedby="helpciudad" placeholder="Ciudad">
+                    </div>                    
+                    <div class="mb-3">
+                        <label for="empresa" class="form-label">Empresa</label>
+                        <input type="text" class="form-control" id="empresa" name="empresa" aria-describedby="helpempresa" placeholder="Empresa">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" aria-describedby="helpcliente" placeholder="Cliente">
+                    </div> 
+                    <div class="mb-3">
+                        <label for="mail" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="mail" name="mail" aria-describedby="helpmail" placeholder="Correo">
+                    </div> 
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" aria-describedby="helptelefono" placeholder="Telefono">
+                    </div> 
+                    <div class="mb-3">
+                        <label for="foto" class="form-label">Foto</label>
+                        <input type="file" class="form-control" id="foto" name="foto" aria-describedby="helpfoto">
+                    </div> 
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>                           
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function exportarCSV() {
+        window.location.href = '/almacen/exportar';
+    }
+</script>
+
+{% include "footer.html" %}

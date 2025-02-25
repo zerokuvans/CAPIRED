@@ -1,0 +1,55 @@
+{% include "header.html" %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form class="d-flex mb-4" method="POST" action="{{ url_for('dashboard') }}">
+                <input class="form-control me-2" type="search" name="search_query" placeholder="Buscar" aria-label="Buscar" required>
+                <select class="form-select me-2" name="search_type" required>
+                    <option value="nombre">Nombre</option>
+                    <option value="cedula">Cédula</option>
+                    <option value="codigo">Código</option>
+                </select>
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+    
+    {% if recurso_operativo %}
+    <div class="row justify-content-center">
+        {% for recurso in recurso_operativo %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">{{ recurso['recurso_operativo_nombre'] }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="card-text"><strong>Codigo:</strong> {{ recurso['id_codigo_consumidor'] }}</p>
+                            <p class="card-text"><strong>Cedula:</strong> {{ recurso['recurso_operativo_cedula'] }}</p>
+                            <p class="card-text"><strong>Carpeta:</strong> {{ recurso['recurso_operativo_carpeta'] }}</p>
+                            <p class="card-text"><strong>Supervisor:</strong> {{ recurso['recurso_operativo_supervisor'] }}</p>
+                            <p class="card-text"><strong>Estado:</strong> {{ recurso['recurso_operativo_estado'] }}</p>
+                            <p class="card-text"><strong>Fecha Creación:</strong> {{ recurso['recurso_operativo_fecha_creacion'] }}</p>
+                            <p class="card-text"><strong>Fecha Inactividad:</strong> {{ recurso['recurso_operativo_fecha_inactividad'] }}</p>
+                            <p class="card-text"><strong>Cargo:</strong> {{ recurso['recurso_operativo_cargo'] }}</p>
+                            <p class="card-text"><strong>Ciudad:</strong> {{ recurso['recurso_operativo_ciudad'] }}</p>
+                            <p class="card-text"><strong>Empresa:</strong> {{ recurso['recurso_operativo_empresa'] }}</p>
+                            <p class="card-text"><strong>Cliente:</strong> {{ recurso['recurso_operativo_cliente'] }}</p>
+                            <p class="card-text"><strong>Correo:</strong> {{ recurso['recurso_operativo_mail'] }}</p>
+                            <p class="card-text"><strong>Telefono:</strong> {{ recurso['recurso_operativo_telefono'] }}</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <img src="{{ url_for('static', filename='uploads/' ~ recurso['recurso_operativo_foto']) }}" alt="Foto" class="img-thumbnail" width="150">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% include "footer.html" %}
