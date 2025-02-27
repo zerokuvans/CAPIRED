@@ -28,7 +28,7 @@
                         <td>{{ item['asignacion_fecha'] }}</td>
                         <td>{{ item['asignacion_estado'] }}</td>
                         <td>
-                            <a href="/logistica/herramientas/Editar/{{ item['id_asignacion'] }}" class="btn btn-warning btn-sm">Editar</a>
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editarHerramientaModal" data-id="{{ item['id_asignacion'] }}" data-tecnico="{{ item['id_codigo_consumidor'] }}" data-cargo="{{ item['asignacion_cargo'] }}" data-fecha="{{ item['asignacion_fecha'] }}" data-barra45cm="{{ item['asignacion_barra_45cm'] }}" data-conoretractil="{{ item['asignacion_cono_retractil'] }}" data-adaptadormandril="{{ item['asignacion_adaptador_mandril'] }}" data-alicate="{{ item['asignacion_alicate'] }}" data-estado="{{ item['asignacion_estado'] }}">Editar</button>
                             <a href="/logistica/herramientas/Eliminar/{{ item['id_asignacion'] }}" class="btn btn-danger btn-sm">Eliminar</a>
                         </td>
                     </tr>
@@ -38,7 +38,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Asignar Herramienta -->
 <div class="modal fade" id="asignarHerramientaModal" tabindex="-1" aria-labelledby="asignarHerramientaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -126,4 +126,135 @@
     </div>
 </div>
 
+<!-- Modal Editar Herramienta -->
+<div class="modal fade" id="editarHerramientaModal" tabindex="-1" aria-labelledby="editarHerramientaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarHerramientaModalLabel">Editar Herramienta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editarHerramientaForm" action="" method="post">
+                    <input type="hidden" id="editId" name="id_asignacion">
+                    <div class="mb-3">
+                        <label for="editTecnico" class="form-label">Tecnico</label>
+                        <select class="form-select" id="editTecnico" name="tecnico" required>
+                            <option selected disabled>Seleccione tecnico</option>
+                            {% for tecnico in lista_tecnico %}
+                            <option value="{{ tecnico.id_codigo_consumidor }}">{{ tecnico.recurso_operativo_nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCargo" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="editCargo" name="cargo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="editFecha" name="fecha" required>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Detalles de Asignación
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="editBarra45cm" class="form-label">Barra 45 cm</label>
+                                <input type="text" class="form-control" id="editBarra45cm" name="asignacion_barra_45cm" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editConoRetractil" class="form-label">Cono Retractil</label>
+                                <input type="text" class="form-control" id="editConoRetractil" name="asignacion_cono_retractil" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Herramientas
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="editAdaptadorMandril" name="adaptadorMandril" value="1">
+                                        <label class="form-check-label" for="editAdaptadorMandril">
+                                            Adaptador Mandril
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="editAlicate" name="alicate" value="1">
+                                        <label class="form-check-label" for="editAlicate">
+                                            Alicate
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- Repeat similar blocks for other tools -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editObservacion" class="form-label">Observación</label>
+                        <textarea class="form-control" id="editObservacion" name="observacion" rows="3"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="editEstado" name="estado" value="1">
+                        <label class="form-check-label" for="editEstado">
+                            Asignado
+                        </label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="editarHerramientaForm" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% include 'footer.html' %}
+
+<script>
+    var editarHerramientaModal = document.getElementById('editarHerramientaModal');
+    editarHerramientaModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var tecnico = button.getAttribute('data-tecnico');
+        var cargo = button.getAttribute('data-cargo');
+        var fecha = button.getAttribute('data-fecha');
+        var barra45cm = button.getAttribute('data-barra45cm');
+        var conoRetractil = button.getAttribute('data-conoretractil');
+        var adaptadorMandril = button.getAttribute('data-adaptadormandril');
+        var alicate = button.getAttribute('data-alicate');
+        var estado = button.getAttribute('data-estado');
+
+        var modalTitle = editarHerramientaModal.querySelector('.modal-title');
+        var editId = editarHerramientaModal.querySelector('#editId');
+        var editTecnico = editarHerramientaModal.querySelector('#editTecnico');
+        var editCargo = editarHerramientaModal.querySelector('#editCargo');
+        var editFecha = editarHerramientaModal.querySelector('#editFecha');
+        var editBarra45cm = editarHerramientaModal.querySelector('#editBarra45cm');
+        var editConoRetractil = editarHerramientaModal.querySelector('#editConoRetractil');
+        var editAdaptadorMandril = editarHerramientaModal.querySelector('#editAdaptadorMandril');
+        var editAlicate = editarHerramientaModal.querySelector('#editAlicate');
+        var editEstado = editarHerramientaModal.querySelector('#editEstado');
+
+        modalTitle.textContent = 'Editar Herramienta ' + id;
+        editId.value = id;
+        editTecnico.value = tecnico;
+        editCargo.value = cargo;
+        editFecha.value = fecha;
+        editBarra45cm.value = barra45cm;
+        editConoRetractil.value = conoRetractil;
+        editAdaptadorMandril.checked = adaptadorMandril == '1';
+        editAlicate.checked = alicate == '1';
+        editEstado.checked = estado == '1';
+
+        // Set the form action to include the id_asignacion
+        var form = editarHerramientaModal.querySelector('#editarHerramientaForm');
+        form.action = '/logistica/herramientas/Editar/' + id;
+    });
+</script>

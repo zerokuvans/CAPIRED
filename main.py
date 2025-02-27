@@ -288,9 +288,10 @@ def editar_herramienta(id_asignacion):
         alicate = request.form.get('alicate', 0)
         barra45cm = request.form.get('asignacion_barra_45cm', 0)
         cono_retractil = request.form.get('asignacion_cono_retractil', 0)
-        
-        sql = "UPDATE capired.asignacion SET id_codigo_consumidor = %s, asignacion_fecha = %s, asignacion_estado = %s, asignacion_cargo = %s, asignacion_adaptador_mandril = %s, asignacion_alicate = %s, asignacion_barra_45cm = %s, asignacion_cono_retractil = %s WHERE id_asignacion = %s"
-        datos = (nombre, fecha, estado, cargo, adaptadorMandril, alicate, barra45cm, cono_retractil, id_asignacion)
+        observacion = request.form.get('observacion', '')
+
+        sql = "UPDATE capired.asignacion SET id_codigo_consumidor = %s, asignacion_fecha = %s, asignacion_estado = %s, asignacion_cargo = %s, asignacion_adaptador_mandril = %s, asignacion_alicate = %s, asignacion_barra_45cm = %s, asignacion_cono_retractil = %s, observacion = %s WHERE id_asignacion = %s"
+        datos = (nombre, fecha, estado, cargo, adaptadorMandril, alicate, barra45cm, cono_retractil, observacion, id_asignacion)
         
         try:
             cursor.execute(sql, datos)
