@@ -274,6 +274,57 @@ def eliminar_herramienta(id_asignacion):
         cursor.close()
     return redirect('/logistica/herramientas')
 
+@app.route('/logistica/herramientas/Editar/<int:id_asignacion>', methods=['GET', 'POST'])
+def editar_herramienta(id_asignacion):
+    conexion = MySQL.connection
+    cursor = conexion.cursor()
+    
+    if request.method == 'POST':
+        nombre = request.form['tecnico']
+        fecha = request.form['fecha']
+        estado = request.form.get('estado', 0)
+        cargo = request.form['cargo']
+        adaptadorMandril = request.form.get('adaptadorMandril', 0)
+        alicate = request.form.get('alicate', 0)
+        barra45cm = request.form.get('asignacion_barra_45cm', 0)
+        cono_retractil = request.form.get('asignacion_cono_retractil', 0)
+        
+        sql = "UPDATE capired.asignacion SET id_codigo_consumidor = %s, asignacion_fecha = %s, asignacion_estado = %s, asignacion_cargo = %s, asignacion_adaptador_mandril = %s, asignacion_alicate = %s, asignacion_barra_45cm = %s, asignacion_cono_retractil = %s WHERE id_asignacion = %s"
+        datos = (nombre, fecha, estado, cargo, adaptadorMandril, alicate, barra45cm, cono_retractil, id_asignacion)
+        
+        try:
+            cursor.execute(sql, datos)
+            conexion.commit()
+            flash('Datos actualizados correctamente')
+        except Exception as e:
+            flash(f'Error al actualizar los datos: {e}')
+        finally:
+            cursor.close()
+        return redirect('/logistica/herramientas')
+    
+    else:
+        try:
+            cursor.execute("SELECT * FROM capired.asignacion WHERE id_asignacion = %s", (id_asignacion,))
+            asignacion = cursor.fetchone()
+            
+            sql_tecnicos = "SELECT id_codigo_consumidor, recurso_operativo_nombre FROM capired.recurso_operativo ORDER BY recurso_operativo_nombre"
+            cursor.execute(sql_tecnicos)
+            lista_tecnico = cursor.fetchall()
+        except Exception as e:
+            flash(f'Error al obtener los datos: {e}')
+            return redirect(url_for('index_logistica'))
+        finally:
+            cursor.close()
+        
+        return render_template('/modulos/logistica/herramientas/edit.html', asignacion=asignacion, lista_tecnico=lista_tecnico)
+
+
+
+
+
+
+
+
 # Modulo de Inventario
 @app.route('/logistica/inventario')
 def index_inventario():

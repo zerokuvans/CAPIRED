@@ -6,61 +6,74 @@
         <div class="card">
             <div class="card-header">Editar Movil</div>
             <div class="card-body">
-                <form action="/almacen/edit/Actualizar" method="post">
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Codigo Consumidor</label>
-                        <input type="text" class="form-control" id="id" name="id" aria-describedby="helpcedula"
-                            placeholder="Codigo" value="{{ recurso_operativo['id_codigo_consumidor'] }}" readonly>
+                <form id="asignarHerramientaForm" action="/logistica/herramientas/Editar/{{ asignacion.id_asignacion }}" method="post">
+                    <div class="mb-3">
+                        <label for="inputTecnico" class="form-label">Tecnico</label>
+                        <select class="form-select" id="inputTecnico" name="tecnico" required>
+                            <option selected disabled>Seleccione tecnico</option>
+                            {% for tecnico in lista_tecnico %}
+                            <option value="{{ tecnico.id_codigo_consumidor }}" {% if tecnico.id_codigo_consumidor == asignacion.id_codigo_consumidor %}selected{% endif %}>{{ tecnico.recurso_operativo_nombre }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="helpnombre"
-                            placeholder="Nombre" value="{{ recurso_operativo['recurso_operativo_nombre'] }}">               
+                    <div class="mb-3">
+                        <label for="inputCargo" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="inputCargo" name="cargo" value="{{ asignacion.asignacion_cargo }}" required>
                     </div>
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Cedula</label>
-                        <input type="text" class="form-control" id="cedula" name="cedula" aria-describedby="helpcedula"
-                            placeholder="Cedula" value="{{ recurso_operativo['recurso_operativo_cedula'] }}">
+                    <div class="mb-3">
+                        <label for="inputFecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="inputFecha" name="fecha" value="{{ asignacion.asignacion_fecha }}" required>
                     </div>
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Carpeta</label>
-                        <input type="text" class="form-control" id="carpeta" name="carpeta" aria-describedby="helpcarpeta"
-                            placeholder="Carpeta" value="{{ recurso_operativo['recurso_operativo_carpeta'] }}">
-                    </div>                
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Estado</label>
-                        <input type="text" class="form-control" id="estado" name="estado" aria-describedby="helpestado"
-                            placeholder="Estado" value="{{ recurso_operativo['recurso_operativo_estado'] }}">
+                    <div class="mb-3">
+                        <label for="asignacion_barra_45cm" class="form-label">Barra 45 cm</label>
+                        <input type="text" class="form-control" id="asignacion_barra_45cm" name="asignacion_barra_45cm" value="{{ asignacion.asignacion_barra_45cm }}" required>
                     </div>
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Cargo</label>
-                        <input type="text" class="form-control" id="cargo" name="cargo" aria-describedby="helpcargo"
-                            placeholder="Cargo" value="{{ recurso_operativo['recurso_operativo_cargo'] }}">
+                    <div class="mb-3">
+                        <label for="asignacion_cono_retractil" class="form-label">Cono Retractil</label>
+                        <input type="text" class="form-control" id="asignacion_cono_retractil" name="asignacion_cono_retractil" value="{{ asignacion.asignacion_cono_retractil }}" required>
                     </div>
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Ciudad</label>
-                        <input type="text" class="form-control" id="ciudad" name="ciudad" aria-describedby="helpciudad"
-                            placeholder="Ciudad" value="{{ recurso_operativo['recurso_operativo_ciudad'] }}">
-                    </div>                    
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Empresa</label>
-                        <input type="text" class="form-control" id="empresa" name="empresa" aria-describedby="helpempresa"
-                            placeholder="Empresa" value="{{ recurso_operativo['recurso_operativo_empresa'] }}">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Herramientas
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="adaptadorMandril" name="adaptadorMandril" value="1" {% if asignacion.asignacion_adaptador_mandril %}checked{% endif %}>
+                                        <label class="form-check-label" for="adaptadorMandril">
+                                            Adaptador Mandril
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="alicate" name="alicate" value="1" {% if asignacion.asignacion_alicate %}checked{% endif %}>
+                                        <label class="form-check-label" for="alicate">
+                                            Alicate
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- Repeat similar blocks for other tools -->
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb3">
-                        <label for="cedula" class="form-label">Cliente</label>
-                        <input type="text" class="form-control" id="cliente" name="cliente" aria-describedby="helpcliente"
-                            placeholder="Cliente" value="{{ recurso_operativo['recurso_operativo_cliente'] }}">
-                    </div> 
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                </form>                           
-                   
-              
-            
+                    <div class="mb-3">
+                        <label for="observacion" class="form-label">Observación</label>
+                        <textarea class="form-control" id="observacion" name="observacion" rows="3">{{ asignacion.observacion }}</textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="estado" name="estado" value="1" {% if asignacion.asignacion_estado %}checked{% endif %}>
+                        <label class="form-check-label" for="estado">
+                            Asignado
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>                 
+            </div>
         </div>
     </div>
     <div class="col-4"></div>
-
 </div>
 
 {% include 'footer.html' %}
