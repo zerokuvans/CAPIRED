@@ -5,6 +5,7 @@ from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import os
+from functools import wraps
 
 load_dotenv()
 
@@ -22,6 +23,25 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 MySQL.init_app(app)
 
+
+# Definición de roles
+ROLES = {
+    '1': 'administrativo',
+    '2': 'tecnicos',
+    '3': 'operativo'
+}
+
+# Decorador para la ruta de login
+def role_required(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'user_role' not in session or session['user_role'] != role:
+                flash('No tienes permiso para acceder a esta página.')
+                return redirect(url_for('login'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 @app.route('/')
 def index():
     return render_template('login.html')
@@ -388,13 +408,23 @@ def guardar_suministros():
 
 # Modulo de Administracion
 @app.route('/administrativo')
+@role_required('1')
 def index_administrativo():
     return render_template('modulos/administrativo/index.html')
 
 #Modulo Operativo
 @app.route('/operativo')
+@role_required('3')
 def index_operativo():
     return render_template('modulos/operativo/index.html')
+
+# Modulo de Tecnicos
+@app.route('/tecnicos')
+@role_required('2')
+def index_tecnicos():
+    return render_template('modulos/tecnicos/index.html')
+
+
 
 # Modulo login
 @app.route('/login', methods=['GET', 'POST'])
@@ -404,7 +434,7 @@ def login():
         password = request.form['password']
         
         # Validar las credenciales del usuario
-        sql = "SELECT * FROM recurso_operativo WHERE recurso_operativo_cedula = %s AND recurso_operativo_password = %s"
+        sql = "SELECT id_codigo_consumidor, id_roles FROM recurso_operativo WHERE recurso_operativo_cedula = %s AND recurso_operativo_password = %s"
         conexion = MySQL.connection
         cursor = conexion.cursor()
         try:
@@ -414,6 +444,7 @@ def login():
             if user:
                 flash('Inicio de sesión exitoso')
                 session['user_id'] = user['id_codigo_consumidor']
+                session['user_role'] = ROLES.get(user['id_roles'])
                 return redirect(url_for('dashboard'))
             else:
                 flash('Nombre de usuario o contraseña incorrectos')
