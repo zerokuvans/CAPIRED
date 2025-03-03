@@ -1,55 +1,272 @@
-{% include "header.html" %}
+{% extends "layout.html" %}
 
+{% block content %}
 <div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form class="d-flex mb-4" method="POST" action="{{ url_for('dashboard') }}">
-                <input class="form-control me-2" type="search" name="search_query" placeholder="Buscar" aria-label="Buscar" required>
-                <select class="form-select me-2" name="search_type" required>
-                    <option value="nombre">Nombre</option>
-                    <option value="cedula">Cédula</option>
-                    <option value="codigo">Código</option>
-                </select>
-                <button class="btn btn-outline-success" type="submit">Buscar</button>
-            </form>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>Panel de Control</h2>
+            {% if session['user_name'] %}
+            <p class="lead">Bienvenido, {{ session['user_name'] }}</p>
+            {% endif %}
         </div>
     </div>
-    
-    {% if recurso_operativo %}
-    <div class="row justify-content-center">
-        {% for recurso in recurso_operativo %}
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">{{ recurso['recurso_operativo_nombre'] }}</h5>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if 'Error' in message %}alert-danger{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <p class="card-text"><strong>Codigo:</strong> {{ recurso['id_codigo_consumidor'] }}</p>
-                            <p class="card-text"><strong>Cedula:</strong> {{ recurso['recurso_operativo_cedula'] }}</p>
-                            <p class="card-text"><strong>Carpeta:</strong> {{ recurso['recurso_operativo_carpeta'] }}</p>
-                            <p class="card-text"><strong>Supervisor:</strong> {{ recurso['recurso_operativo_supervisor'] }}</p>
-                            <p class="card-text"><strong>Estado:</strong> {{ recurso['recurso_operativo_estado'] }}</p>
-                            <p class="card-text"><strong>Fecha Creación:</strong> {{ recurso['recurso_operativo_fecha_creacion'] }}</p>
-                            <p class="card-text"><strong>Fecha Inactividad:</strong> {{ recurso['recurso_operativo_fecha_inactividad'] }}</p>
-                            <p class="card-text"><strong>Cargo:</strong> {{ recurso['recurso_operativo_cargo'] }}</p>
-                            <p class="card-text"><strong>Ciudad:</strong> {{ recurso['recurso_operativo_ciudad'] }}</p>
-                            <p class="card-text"><strong>Empresa:</strong> {{ recurso['recurso_operativo_empresa'] }}</p>
-                            <p class="card-text"><strong>Cliente:</strong> {{ recurso['recurso_operativo_cliente'] }}</p>
-                            <p class="card-text"><strong>Correo:</strong> {{ recurso['recurso_operativo_mail'] }}</p>
-                            <p class="card-text"><strong>Telefono:</strong> {{ recurso['recurso_operativo_telefono'] }}</p>
+                    <h5 class="card-title">Búsqueda Avanzada de Recursos</h5>
+                    <form action="{{ url_for('buscar') }}" method="POST" id="searchForm" class="mb-3">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="searchQuery" name="search_query" placeholder="Término de búsqueda">
+                                    <label for="searchQuery">Término de búsqueda</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="searchType" name="search_type">
+                                        <option value="nombre">Nombre</option>
+                                        <option value="cedula">Cédula</option>
+                                        <option value="codigo">Código</option>
+                                        <option value="cargo">Cargo</option>
+                                        <option value="estado">Estado</option>
+                                    </select>
+                                    <label for="searchType">Buscar por</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="filterEstado" name="estado">
+                                        <option value="">Todos</option>
+                                        <option value="Activo">Activo</option>
+                                        <option value="Inactivo">Inactivo</option>
+                                    </select>
+                                    <label for="filterEstado">Estado</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-center">
-                            <img src="{{ url_for('static', filename='uploads/' ~ recurso['recurso_operativo_foto']) }}" alt="Foto" class="img-thumbnail" width="150">
+                        
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="busquedaAvanzada">
+                                    <label class="form-check-label" for="busquedaAvanzada">Mostrar búsqueda avanzada</label>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="row mt-3 advanced-search-options" style="display: none;">
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="fechaDesde" name="fecha_desde">
+                                    <label for="fechaDesde">Fecha desde</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="fechaHasta" name="fecha_hasta">
+                                    <label for="fechaHasta">Fecha hasta</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <select class="form-select" id="ordenar" name="ordenar">
+                                        <option value="reciente">Más reciente</option>
+                                        <option value="antiguo">Más antiguo</option>
+                                        <option value="nombre_asc">Nombre (A-Z)</option>
+                                        <option value="nombre_desc">Nombre (Z-A)</option>
+                                    </select>
+                                    <label for="ordenar">Ordenar por</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="searchResults" class="mt-3">
+                        <!-- Aquí se mostrarán los resultados en tiempo real -->
                     </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title">Recursos Operativos</h5>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('create_almacen') }}" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Nuevo Recurso
+                            </a>
+                            {% if recurso_operativo %}
+                            <a href="{{ url_for('exportar_csv') }}" class="btn btn-info">
+                                <i class="fas fa-download"></i> Exportar CSV
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if recurso_operativo %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Cédula</th>
+                                    <th>Estado</th>
+                                    <th>Cargo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for recurso in recurso_operativo %}
+                                <tr>
+                                    <td>{{ recurso.id_codigo_consumidor }}</td>
+                                    <td>{{ recurso.recurso_operativo_nombre }}</td>
+                                    <td>{{ recurso.recurso_operativo_cedula }}</td>
+                                    <td>
+                                        <span class="badge {% if recurso.recurso_operativo_estado == 'Activo' %}bg-success{% elif recurso.recurso_operativo_estado == 'Inactivo' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ recurso.recurso_operativo_estado }}
+                                        </span>
+                                    </td>
+                                    <td>{{ recurso.recurso_operativo_cargo }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ url_for('editar_almacen', id_codigo_consumidor=recurso.id_codigo_consumidor) }}" 
+                                               class="btn btn-sm btn-primary" 
+                                               title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{{ url_for('eliminar_almacen', id_codigo_consumidor=recurso.id_codigo_consumidor) }}" 
+                                               class="btn btn-sm btn-danger" 
+                                               onclick="return confirm('¿Está seguro de eliminar este registro?')"
+                                               title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <p class="text-muted mb-0">No hay recursos para mostrar</p>
+                        <a href="{{ url_for('create_almacen') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus"></i> Agregar Nuevo Recurso
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if session['user_role'] == 'administrativo' %}
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Panel Administrativo</h5>
+                    <a href="{{ url_for('index_administrativo') }}" class="btn btn-primary">
+                        <i class="fas fa-cog"></i> Ir al Panel Administrativo
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>
+{% endblock %}
 
-{% include "footer.html" %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const busquedaAvanzada = document.getElementById('busquedaAvanzada');
+    const advancedOptions = document.querySelector('.advanced-search-options');
+    const searchForm = document.getElementById('searchForm');
+    const searchQuery = document.getElementById('searchQuery');
+    let searchTimeout;
+
+    // Toggle búsqueda avanzada
+    busquedaAvanzada.addEventListener('change', function() {
+        advancedOptions.style.display = this.checked ? 'flex' : 'none';
+    });
+
+    // Búsqueda en tiempo real
+    searchQuery.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const formData = new FormData(searchForm);
+            fetch('{{ url_for("buscar") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateSearchResults(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }, 300);
+    });
+
+    // Actualizar resultados
+    function updateSearchResults(data) {
+        const resultsDiv = document.getElementById('searchResults');
+        if (data.length === 0) {
+            resultsDiv.innerHTML = '<div class="alert alert-info">No se encontraron resultados</div>';
+            return;
+        }
+        // Actualizar la tabla existente con los nuevos resultados
+        const tableBody = document.querySelector('tbody');
+        if (tableBody) {
+            tableBody.innerHTML = data.map(recurso => `
+                <tr>
+                    <td>${recurso.id_codigo_consumidor}</td>
+                    <td>${recurso.recurso_operativo_nombre}</td>
+                    <td>${recurso.recurso_operativo_cedula}</td>
+                    <td>
+                        <span class="badge ${recurso.recurso_operativo_estado === 'Activo' ? 'bg-success' : 'bg-danger'}">
+                            ${recurso.recurso_operativo_estado}
+                        </span>
+                    </td>
+                    <td>${recurso.recurso_operativo_cargo}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/editar/${recurso.id_codigo_consumidor}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="/eliminar/${recurso.id_codigo_consumidor}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    }
+});
+</script>
+{% endblock %}
